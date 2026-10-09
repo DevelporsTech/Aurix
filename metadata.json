@@ -1,0 +1,6 @@
+{
+  "name": "AURIX",
+  "description": "Cinematic 3D Automotive Experience & Luxury E-Commerce platform for AURIX Hypercars in Pakistan",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
