@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -92,24 +92,42 @@ export default function ThreeVehicleViewer({
   isSpinning?: boolean;
   wingAngle?: number;
 }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
-    <Canvas
-      camera={{ position: [3.2, 1.8, 4.2], fov: 42 }}
-      style={{ width: '100%', height: '100%' }}
-    >
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[10, 12, 6]} intensity={1.8} />
-      <directionalLight position={[-8, 6, -6]} intensity={0.8} color="#00e5ff" />
-      <directionalLight position={[0, -5, 0]} intensity={0.3} color="#ffffff" />
+    <div style={{ width: '100%', height: '100%', touchAction: 'pan-y' }}>
+      <Canvas
+        camera={{
+          position: isMobile ? [3.8, 2.0, 5.2] : [3.2, 1.8, 4.2],
+          fov: isMobile ? 48 : 42
+        }}
+        dpr={[1, 2]}
+        style={{ width: '100%', height: '100%', touchAction: 'pan-y' }}
+      >
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[10, 12, 6]} intensity={1.8} />
+        <directionalLight position={[-8, 6, -6]} intensity={0.8} color="#00e5ff" />
+        <directionalLight position={[0, -5, 0]} intensity={0.3} color="#ffffff" />
 
-      <ProceduralSupercar color={color} isSpinning={isSpinning} wingAngle={wingAngle} />
+        <ProceduralSupercar color={color} isSpinning={isSpinning} wingAngle={wingAngle} />
 
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        maxPolarAngle={Math.PI / 2.05}
-        minPolarAngle={Math.PI / 6}
-      />
-    </Canvas>
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          maxPolarAngle={Math.PI / 2.05}
+          minPolarAngle={Math.PI / 6}
+          rotateSpeed={0.8}
+        />
+      </Canvas>
+    </div>
   );
 }
